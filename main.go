@@ -15,26 +15,26 @@ type MovingAverage struct {
 	Average float64
 }
 
-func sum(current MovingAverage,
-	result chan MovingAverage) {
-	current.Average = float64(current.Total) / float64(current.Count) // Imagine that this is HEAVY lifting.
-	result <- current
+func sum(speeds []int,
+	results chan MovingAverage) {
+	var m = MovingAverage{}
+	for i, speed := range speeds {
+		m.Total = m.Total + speed
+		m.Count = i + 1
+		m.Average = float64(m.Total) / float64(m.Count)
+		results <- m
+	}
 }
 func display(current chan MovingAverage) {
-	time.Sleep(time.Second)
+	
 	c := <-current
 	fmt.Println("CURRENT MOVING AVERAGE", c.Average)
 }
 func main() {
 	speeds := []int{0, 20, 30, 40, 50, 60, 70}
-
-	results := make(chan MovingAverage)
-	var m = MovingAverage{}
-	for i, speed := range speeds {
-		m.Total = m.Total + speed
-		m.Count = i + 1
-		go sum(m, results)
-		display(results)
-	}
+	results := make(chan MovingAverage, 10)
+	go sum(speeds, results)
+	time.Sleep(time.Second)
+	go display(results)
 	fmt.Println("END")
 }
