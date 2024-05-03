@@ -9,6 +9,8 @@ package main
 */
 import (
 	"fmt"
+
+	"github.com/google/uuid"
 )
 
 func greeting() string   { return "Hello World" }
@@ -45,4 +47,8 @@ func main() {
 
 	// It can also do run time type checking !!
 	demoRTTI(shape1)
+
+	for i := 0; i < 5; i++ {
+		println(uuid.New().String())
+	}
 }
