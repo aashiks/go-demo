@@ -17,6 +17,11 @@ func greeting(from string) {
 func main() {
 	greeting("main")
 	go greeting("go routine") //non blocking, light weight thread
-	//time.Sleep(time.Second)   //: What happens here ?
+
+	go func(msg string) {
+		fmt.Println(msg)
+	}("I am an anonymous func")
+
+	//time.Sleep(time.Second) //: What happens here ?
 	fmt.Println("END")
 }
